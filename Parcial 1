@@ -1,0 +1,153 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+/*
+=========================================
+        PARCIAL DE C++ COMPLETO
+  Nombre: _______________________________
+  Grupo: ___________   Fecha: ___/___/____
+  Duración: 3 horas    Total: 100 pts
+  Temas: Variables, Operadores, Condicionales,
+         Bucles, Funciones
+=========================================
+*/
+
+/* =========================================================
+   SECCIÓN A — OPCIÓN MÚLTIPLE (10 × 3 pts = 30 pts)
+   =========================================================
+   Respuestas correctas:
+   1) B   2) B   3) B   4) C   5) B
+   6) C   7) A   8) B   9) B   10) A
+*/
+
+// 1B: int x = 10;
+// 2B: 3 3.5
+// 3B: 0 1 1
+// 4C: Entra al else porque tras x=0 el valor es falso.
+// 5B: do-while ejecuta al menos una vez.
+// 6C: cin >> a >> b;
+// 7A: 11
+// 8B: void f(int& n);
+// 9B: continue salta a la siguiente iteración.
+// 10A: (3 == 3) && !(2 > 5) es verdadero.
+
+
+/* =========================================================
+   SECCIÓN B — PREDICE LA SALIDA (5 × 6 pts = 30 pts)
+   =========================================================
+*/
+
+void seccionB() {
+    cout << "==============================\n";
+    cout << "  SECCIÓN B — SALIDAS\n";
+    cout << "==============================\n\n";
+
+    // 1)
+    int a = 5, b = 2;
+    cout << "1) " << (a + b * 3) << endl; // Respuesta: 11
+
+    // 2)
+    int n = 0;
+    cout << "2) ";
+    while (n < 3) {
+        cout << n << " ";
+        n++;
+    }
+    cout << endl; // Salida: 0 1 2
+
+    // 3)
+    int x = 10;
+    cout << "3) ";
+    if (x % 2 == 0)
+        cout << "par";
+    else
+        cout << "impar";
+    cout << endl; // Salida: par
+
+    // 4)
+    int i = 3;
+    cout << "4) ";
+    do {
+        cout << i--;
+    } while (i > 0);
+    cout << endl; // Salida: 321
+
+    // 5)
+    int a2 = 1;
+    int b2 = (a2++ > 1) ? 100 : 200;
+    cout << "5) " << a2 << " " << b2 << endl; // Salida: 2 200
+}
+
+
+/* =========================================================
+   SECCIÓN C — IMPLEMENTACIÓN DE FUNCIONES (4 × 10 pts = 40 pts)
+   =========================================================
+*/
+
+// C1) Devuelve el mayor de tres enteros
+int max3(int a, int b, int c) {
+    int max = a;
+    if (b > max) max = b;
+    if (c > max) max = c;
+    return max;
+}
+
+// C2) Devuelve la suma de todos los enteros en [a, b]
+int sumaRango(int a, int b) {
+    int suma = 0;
+    for (int i = a; i <= b; i++) {
+        suma += i;
+    }
+    return suma;
+}
+
+// C3) Devuelve true si n contiene el dígito d
+bool contieneDigito(int n, int d) {
+    if (n == 0 && d == 0) return true;
+    while (n > 0) {
+        int dig = n % 10;
+        if (dig == d) return true;
+        n /= 10;
+    }
+    return false;
+}
+
+// C4) Imprime la tabla de multiplicar del número n
+void tablaMultiplicar(int n) {
+    for (int i = 1; i <= 10; i++) {
+        cout << n << " x " << i << " = " << n * i << endl;
+    }
+}
+
+
+/* =========================================================
+   FUNCIÓN PRINCIPAL — TEST GENERAL
+   =========================================================
+*/
+
+int main() {
+    cout << "==============================\n";
+    cout << "      PARCIAL DE C++\n";
+    cout << "==============================\n\n";
+
+    seccionB();
+
+    cout << "\n==============================\n";
+    cout << "  SECCIÓN C — PRUEBAS DE FUNCIONES\n";
+    cout << "==============================\n\n";
+
+    cout << "C1) max3(4, 9, 2) = " << max3(4, 9, 2) << endl;
+    cout << "C2) sumaRango(3, 6) = " << sumaRango(3, 6) << endl;
+    cout << "C3) contieneDigito(12345, 4) = "
+         << (contieneDigito(12345, 4) ? "true" : "false") << endl;
+
+    cout << "\nC4) tablaMultiplicar(5):\n";
+    tablaMultiplicar(5);
+
+    cout << "\n==============================\n";
+    cout << "       FIN DEL PARCIAL\n";
+    cout << "==============================\n";
+
+    return 0;
+}
