@@ -1,0 +1,340 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <fstream>
+#include <sstream>
+#include <iomanip>
+#include <cctype>
+
+using namespace std;
+
+// ==================== EJERCICIO 1: Estadísticas básicas ====================
+void ejercicio1() {
+    cout << "=== Ejercicio 1: Estadísticas básicas ===" << endl;
+    
+    vector<int> arr;
+    int n;
+    cout << "Ingrese n: ";
+    cin >> n;
+    arr.resize(n);
+    
+    cout << "Ingrese " << n << " números: ";
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+    
+    int minv = arr[0], maxv = arr[0];
+    double suma = 0;
+    for (int num : arr) {
+        if (num < minv) minv = num;
+        if (num > maxv) maxv = num;
+        suma += num;
+    }
+    double prom = suma / n;
+    
+    cout << "min=" << minv << " max=" << maxv << " prom=" << fixed << setprecision(2) << prom << endl;
+}
+
+// ==================== EJERCICIO 2: Rotación circular ====================
+void ejercicio2() {
+    cout << "\n=== Ejercicio 2: Rotación circular ===" << endl;
+    
+    vector<int> arr = {1, 2, 3, 4, 5};
+    int k = 2;
+    
+    cout << "Original: ";
+    for (int num : arr) cout << num << " ";
+    cout << endl;
+    
+    k = k % arr.size();
+    if (k != 0) {
+        reverse(arr.begin(), arr.end());
+        reverse(arr.begin(), arr.begin() + k);
+        reverse(arr.begin() + k, arr.end());
+    }
+    
+    cout << "Rotado " << k << " posiciones: ";
+    for (int num : arr) cout << num << " ";
+    cout << endl;
+}
+
+// ==================== EJERCICIO 3: Normalizar cadenas ====================
+void ejercicio3() {
+    cout << "\n=== Ejercicio 3: Normalizar cadenas ===" << endl;
+    
+    string input = "  hola   mundo   C   ";
+    string result;
+    bool prev_space = true;
+    
+    for (char c : input) {
+        if (isspace(c)) {
+            if (!prev_space) {
+                result += ' ';
+                prev_space = true;
+            }
+        } else {
+            result += c;
+            prev_space = false;
+        }
+    }
+    
+    if (!result.empty() && isspace(result.back())) {
+        result.pop_back();
+    }
+    
+    cout << "Entrada: \"" << input << "\"" << endl;
+    cout << "Salida: \"" << result << "\"" << endl;
+    cout << "Longitud: " << result.length() << endl;
+}
+
+// ==================== EJERCICIO 4: Matriz sumas ====================
+void ejercicio4() {
+    cout << "\n=== Ejercicio 4: Matriz sumas ===" << endl;
+    
+    vector<vector<int>> A = {
+        {1, 2, 3, 4},
+        {5, 6, 7, 8},
+        {9, 0, 1, 2}
+    };
+    
+    vector<int> sumF(A.size(), 0), sumC(A[0].size(), 0);
+    
+    for (size_t i = 0; i < A.size(); i++) {
+        for (size_t j = 0; j < A[0].size(); j++) {
+            sumF[i] += A[i][j];
+            sumC[j] += A[i][j];
+        }
+    }
+    
+    cout << "sumF: [";
+    for (size_t i = 0; i < sumF.size(); i++) {
+        cout << sumF[i] << (i < sumF.size() - 1 ? "," : "");
+    }
+    cout << "]" << endl;
+    
+    cout << "sumC: [";
+    for (size_t i = 0; i < sumC.size(); i++) {
+        cout << sumC[i] << (i < sumC.size() - 1 ? "," : "");
+    }
+    cout << "]" << endl;
+}
+
+// ==================== EJERCICIO 5: Estudiantes ====================
+struct Estudiante {
+    string nombre;
+    int edad;
+    double promedio;
+};
+
+void ejercicio5() {
+    cout << "\n=== Ejercicio 5: Registro de estudiantes ===" << endl;
+    
+    vector<Estudiante> estudiantes = {
+        {"Ana", 20, 8.5},
+        {"Luis", 22, 9.1},
+        {"Maria", 21, 8.8},
+        {"Carlos", 19, 7.9}
+    };
+    
+    sort(estudiantes.begin(), estudiantes.end(), 
+        [](const Estudiante& a, const Estudiante& b) {
+            return a.promedio > b.promedio;
+        });
+    
+    cout << "Top-3 por promedio:" << endl;
+    for (int i = 0; i < min(3, (int)estudiantes.size()); i++) {
+        cout << i+1 << ". " << estudiantes[i].nombre << " - " << estudiantes[i].promedio << endl;
+    }
+    
+    string nombre_buscar = "Maria";
+    auto it = find_if(estudiantes.begin(), estudiantes.end(),
+        [&](const Estudiante& e) { return e.nombre == nombre_buscar; });
+    
+    if (it != estudiantes.end()) {
+        cout << "\nEncontrado: " << it->nombre << ", Edad: " << it->edad 
+             << ", Promedio: " << it->promedio << endl;
+    } else {
+        cout << "\nNo encontrado: " << nombre_buscar << endl;
+    }
+}
+
+// ==================== EJERCICIO 6: Lista enlazada ====================
+struct Nodo {
+    int x;
+    Nodo* sig;
+    Nodo(int valor) : x(valor), sig(nullptr) {}
+};
+
+class Lista {
+private:
+    Nodo* cabeza;
+    Nodo* cola;
+    int tam;
+    
+public:
+    Lista() : cabeza(nullptr), cola(nullptr), tam(0) {}
+    
+    ~Lista() { clear(); }
+    
+    void push_front(int valor) {
+        Nodo* nuevo = new Nodo(valor);
+        if (!cabeza) cabeza = cola = nuevo;
+        else { nuevo->sig = cabeza; cabeza = nuevo; }
+        tam++;
+    }
+    
+    void push_back(int valor) {
+        Nodo* nuevo = new Nodo(valor);
+        if (!cola) cabeza = cola = nuevo;
+        else { cola->sig = nuevo; cola = nuevo; }
+        tam++;
+    }
+    
+    bool pop_front() {
+        if (!cabeza) return false;
+        Nodo* temp = cabeza;
+        cabeza = cabeza->sig;
+        delete temp;
+        tam--;
+        if (!cabeza) cola = nullptr;
+        return true;
+    }
+    
+    int size() const { return tam; }
+    
+    void clear() { while (pop_front()); }
+    
+    void imprimir() const {
+        Nodo* actual = cabeza;
+        while (actual) {
+            cout << actual->x << " ";
+            actual = actual->sig;
+        }
+        cout << endl;
+    }
+};
+
+void ejercicio6() {
+    cout << "\n=== Ejercicio 6: Lista enlazada ===" << endl;
+    
+    Lista lista;
+    vector<pair<string, int>> comandos = {
+        {"pf", 3}, {"pf", 2}, {"pb", 9}, {"pop", 0}, {"pf", 7}
+    };
+    
+    for (auto& cmd : comandos) {
+        if (cmd.first == "pf") lista.push_front(cmd.second);
+        else if (cmd.first == "pb") lista.push_back(cmd.second);
+        else if (cmd.first == "pop") lista.pop_front();
+    }
+    
+    cout << "Contenido final: ";
+    lista.imprimir();
+}
+
+// ==================== EJERCICIO 7: Punteros a función ====================
+int doble(int x) { return x * 2; }
+int cuadrado(int x) { return x * x; }
+
+void aplicar(vector<int>& arr, int (*op)(int)) {
+    for (size_t i = 0; i < arr.size(); i++) {
+        arr[i] = op(arr[i]);
+    }
+}
+
+void ejercicio7() {
+    cout << "\n=== Ejercicio 7: Punteros a función ===" << endl;
+    
+    vector<int> arr = {1, 2, 3, 4, 5};
+    
+    cout << "Original: ";
+    for (int num : arr) cout << num << " ";
+    cout << endl;
+    
+    aplicar(arr, doble);
+    cout << "Doble: ";
+    for (int num : arr) cout << num << " ";
+    cout << endl;
+    
+    aplicar(arr, cuadrado);
+    cout << "Cuadrado: ";
+    for (int num : arr) cout << num << " ";
+    cout << endl;
+}
+
+// ==================== EJERCICIO 8: Archivo ventas ====================
+struct Venta {
+    string producto;
+    int unidades;
+    double precio;
+};
+
+void ejercicio8() {
+    cout << "\n=== Ejercicio 8: Estadísticas de ventas ===" << endl;
+    
+    // Crear archivo de ejemplo
+    ofstream archivo("ventas.csv");
+    archivo << "Laptop,5,1200.50\n";
+    archivo << "Mouse,15,25.75\n";
+    archivo << "Teclado,8,45.99\n";
+    archivo.close();
+    
+    // Leer archivo
+    vector<Venta> ventas;
+    ifstream entrada("ventas.csv");
+    string linea;
+    
+    while (getline(entrada, linea)) {
+        stringstream ss(linea);
+        string producto, str_unidades, str_precio;
+        
+        getline(ss, producto, ',');
+        getline(ss, str_unidades, ',');
+        getline(ss, str_precio, ',');
+        
+        ventas.push_back({producto, stoi(str_unidades), stod(str_precio)});
+    }
+    
+    // Calcular estadísticas
+    double total_vendido = 0;
+    string producto_mas_vendido = ventas[0].producto;
+    int max_unidades = ventas[0].unidades;
+    int total_unidades = 0;
+    
+    for (const auto& venta : ventas) {
+        double subtotal = venta.unidades * venta.precio;
+        total_vendido += subtotal;
+        total_unidades += venta.unidades;
+        
+        if (venta.unidades > max_unidades) {
+            max_unidades = venta.unidades;
+            producto_mas_vendido = venta.producto;
+        }
+    }
+    
+    double ticket_promedio = total_unidades > 0 ? total_vendido / total_unidades : 0;
+    
+    cout << "Total vendido: $" << total_vendido << endl;
+    cout << "Producto más vendido: " << producto_mas_vendido 
+         << " (" << max_unidades << " unidades)" << endl;
+    cout << "Ticket promedio: $" << fixed << setprecision(2) << ticket_promedio << endl;
+}
+
+// ==================== MENÚ PRINCIPAL ====================
+int main() {
+    cout << "TALLER INTEGRAL C++ - TODOS LOS EJERCICIOS" << endl;
+    cout << "===========================================" << endl;
+    
+    ejercicio1();
+    ejercicio2();
+    ejercicio3();
+    ejercicio4();
+    ejercicio5();
+    ejercicio6();
+    ejercicio7();
+    ejercicio8();
+    
+    cout << "\n=== Todos los ejercicios completados ===" << endl;
+    return 0;
+}
