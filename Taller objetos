@@ -1,0 +1,760 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <iomanip>
+using namespace std;
+
+// ============================================
+// NIVEL 1 - EJERCICIO 1.1: CLASE VEHÍCULO
+// ============================================
+
+class Vehiculo {
+private:
+    string marca;
+    string modelo;
+    int anio;
+    double velocidadMaxima;
+
+public:
+    Vehiculo(string m, string mod, int a, double vel) {
+        marca = m;
+        modelo = mod;
+        setAnio(a);
+        setVelocidadMaxima(vel);
+    }
+
+    string getMarca() const { return marca; }
+    string getModelo() const { return modelo; }
+    int getAnio() const { return anio; }
+    double getVelocidadMaxima() const { return velocidadMaxima; }
+
+    void setMarca(string m) { marca = m; }
+    void setModelo(string mod) { modelo = mod; }
+    
+    void setAnio(int a) {
+        if (a > 1886) anio = a;
+        else { cout << "Error: El año debe ser mayor a 1886" << endl; anio = 1887; }
+    }
+    
+    void setVelocidadMaxima(double vel) {
+        if (vel > 0) velocidadMaxima = vel;
+        else { cout << "Error: La velocidad debe ser positiva" << endl; velocidadMaxima = 1; }
+    }
+
+    void mostrarInfo() const {
+        cout << "\n=== Vehículo ===" << endl;
+        cout << "Marca: " << marca << " | Modelo: " << modelo << endl;
+        cout << "Año: " << anio << " | Velocidad: " << velocidadMaxima << " km/h" << endl;
+    }
+
+    void acelerar(double incremento) {
+        velocidadMaxima += incremento;
+        cout << "Velocidad incrementada en " << incremento << " km/h" << endl;
+    }
+};
+
+// ============================================
+// NIVEL 1 - EJERCICIO 1.2: CLASE PRODUCTO
+// ============================================
+
+class Producto {
+private:
+    string codigo;
+    string nombre;
+    double precio;
+    int cantidad;
+
+public:
+    Producto(string cod, string nom, double prec, int cant) {
+        codigo = cod;
+        nombre = nom;
+        setPrecio(prec);
+        setCantidad(cant);
+    }
+
+    string getCodigo() const { return codigo; }
+    string getNombre() const { return nombre; }
+    double getPrecio() const { return precio; }
+    int getCantidad() const { return cantidad; }
+
+    void setCodigo(string cod) { codigo = cod; }
+    void setNombre(string nom) { nombre = nom; }
+    
+    void setPrecio(double prec) {
+        if (prec >= 0) precio = prec;
+        else { cout << "Error: Precio no puede ser negativo" << endl; precio = 0; }
+    }
+    
+    void setCantidad(int cant) {
+        if (cant >= 0) cantidad = cant;
+        else { cout << "Error: Cantidad no puede ser negativa" << endl; cantidad = 0; }
+    }
+
+    double calcularValorTotal() const {
+        return precio * cantidad;
+    }
+
+    void aplicarDescuento(double porcentaje) {
+        if (porcentaje >= 0 && porcentaje <= 100) {
+            precio -= precio * (porcentaje / 100.0);
+            cout << "Descuento del " << porcentaje << "% aplicado" << endl;
+        } else {
+            cout << "Error: Porcentaje debe estar entre 0 y 100" << endl;
+        }
+    }
+
+    void mostrarInfo() const {
+        cout << "\n=== Producto ===" << endl;
+        cout << "Código: " << codigo << " | Nombre: " << nombre << endl;
+        cout << fixed << setprecision(2);
+        cout << "Precio: $" << precio << " | Cantidad: " << cantidad << endl;
+        cout << "Valor Total: $" << calcularValorTotal() << endl;
+    }
+};
+
+// ============================================
+// NIVEL 2 - EJERCICIO 2.1: HERENCIA VEHÍCULOS
+// ============================================
+
+class Auto : public Vehiculo {
+private:
+    int numeroPuertas;
+    string tipoCombustible;
+
+public:
+    Auto(string m, string mod, int a, double vel, int puertas, string combustible)
+        : Vehiculo(m, mod, a, vel), numeroPuertas(puertas), tipoCombustible(combustible) {}
+
+    int getNumeroPuertas() const { return numeroPuertas; }
+    string getTipoCombustible() const { return tipoCombustible; }
+
+    void setNumeroPuertas(int p) { numeroPuertas = p; }
+    void setTipoCombustible(string c) { tipoCombustible = c; }
+
+    void mostrarInfo() const {
+        cout << "\n=== Auto ===" << endl;
+        Vehiculo::mostrarInfo();
+        cout << "Puertas: " << numeroPuertas << " | Combustible: " << tipoCombustible << endl;
+    }
+};
+
+class Motocicleta : public Vehiculo {
+private:
+    bool tieneAleron;
+    int cilindrada;
+
+public:
+    Motocicleta(string m, string mod, int a, double vel, bool aleron, int cc)
+        : Vehiculo(m, mod, a, vel), tieneAleron(aleron), cilindrada(cc) {}
+
+    bool getTieneAleron() const { return tieneAleron; }
+    int getCilindrada() const { return cilindrada; }
+
+    void setTieneAleron(bool a) { tieneAleron = a; }
+    void setCilindrada(int cc) { cilindrada = cc; }
+
+    void mostrarInfo() const {
+        cout << "\n=== Motocicleta ===" << endl;
+        Vehiculo::mostrarInfo();
+        cout << "Alerón: " << (tieneAleron ? "Sí" : "No") << " | Cilindrada: " << cilindrada << " cc" << endl;
+    }
+};
+
+// ============================================
+// NIVEL 2 - EJERCICIO 2.2: SISTEMA EMPLEADOS
+// ============================================
+
+class Empleado {
+protected:
+    string nombreCompleto;
+    string numeroEmpleado;
+    double salarioBase;
+
+public:
+    Empleado(string nombre, string numero, double salario)
+        : nombreCompleto(nombre), numeroEmpleado(numero), salarioBase(salario) {}
+
+    string getNombreCompleto() const { return nombreCompleto; }
+    string getNumeroEmpleado() const { return numeroEmpleado; }
+    double getSalarioBase() const { return salarioBase; }
+
+    void setNombreCompleto(string n) { nombreCompleto = n; }
+    void setNumeroEmpleado(string n) { numeroEmpleado = n; }
+    void setSalarioBase(double s) { if (s >= 0) salarioBase = s; }
+
+    virtual void mostrarInfo() const {
+        cout << "\n=== Empleado ===" << endl;
+        cout << "Nombre: " << nombreCompleto << endl;
+        cout << "Número: " << numeroEmpleado << " | Salario: $" << salarioBase << endl;
+    }
+
+    virtual ~Empleado() {}
+};
+
+class EmpleadoTiempoCompleto : public Empleado {
+private:
+    string beneficios;
+    double bono;
+
+public:
+    EmpleadoTiempoCompleto(string nombre, string numero, double salario, string benef, double b)
+        : Empleado(nombre, numero, salario), beneficios(benef), bono(b) {}
+
+    string getBeneficios() const { return beneficios; }
+    double getBono() const { return bono; }
+
+    void setBeneficios(string b) { beneficios = b; }
+    void setBono(double b) { bono = b; }
+
+    double calcularSalarioTotal() const {
+        return salarioBase + bono;
+    }
+
+    void mostrarInfo() const override {
+        cout << "\n=== Empleado Tiempo Completo ===" << endl;
+        cout << "Nombre: " << nombreCompleto << " | Número: " << numeroEmpleado << endl;
+        cout << fixed << setprecision(2);
+        cout << "Salario Base: $" << salarioBase << " | Bono: $" << bono << endl;
+        cout << "Beneficios: " << beneficios << endl;
+        cout << "Salario Total: $" << calcularSalarioTotal() << endl;
+    }
+};
+
+class EmpleadoPorHoras : public Empleado {
+private:
+    int horasTrabajadas;
+    double tarifaPorHora;
+
+public:
+    EmpleadoPorHoras(string nombre, string numero, int horas, double tarifa)
+        : Empleado(nombre, numero, 0), horasTrabajadas(horas), tarifaPorHora(tarifa) {}
+
+    int getHorasTrabajadas() const { return horasTrabajadas; }
+    double getTarifaPorHora() const { return tarifaPorHora; }
+
+    void setHorasTrabajadas(int h) { horasTrabajadas = h; }
+    void setTarifaPorHora(double t) { tarifaPorHora = t; }
+
+    double calcularSalarioTotal() const {
+        return horasTrabajadas * tarifaPorHora;
+    }
+
+    void mostrarInfo() const override {
+        cout << "\n=== Empleado Por Horas ===" << endl;
+        cout << "Nombre: " << nombreCompleto << " | Número: " << numeroEmpleado << endl;
+        cout << fixed << setprecision(2);
+        cout << "Horas: " << horasTrabajadas << " | Tarifa: $" << tarifaPorHora << endl;
+        cout << "Salario Total: $" << calcularSalarioTotal() << endl;
+    }
+};
+
+// ============================================
+// NIVEL 3 - EJERCICIO 3.1: JERARQUÍA ANIMALES
+// ============================================
+
+class Animal {
+protected:
+    string nombre;
+    int edad;
+    double peso;
+
+public:
+    Animal(string n, int e, double p) : nombre(n), edad(e), peso(p) {}
+
+    string getNombre() const { return nombre; }
+    int getEdad() const { return edad; }
+    double getPeso() const { return peso; }
+
+    void setNombre(string n) { nombre = n; }
+    void setEdad(int e) { if (e >= 0) edad = e; }
+    void setPeso(double p) { if (p > 0) peso = p; }
+
+    virtual void hacerSonido() const {
+        cout << "El animal hace un sonido..." << endl;
+    }
+
+    virtual void mostrarInfo() const {
+        cout << "\nNombre: " << nombre << " | Edad: " << edad << " años | Peso: " << peso << " kg" << endl;
+    }
+
+    virtual ~Animal() {}
+};
+
+class Mamifero : public Animal {
+protected:
+    bool tieneColaMamifero;
+
+public:
+    Mamifero(string n, int e, double p, bool cola)
+        : Animal(n, e, p), tieneColaMamifero(cola) {}
+
+    bool getTieneCola() const { return tieneColaMamifero; }
+    void setTieneCola(bool cola) { tieneColaMamifero = cola; }
+
+    void mostrarInfo() const override {
+        cout << "\n=== Mamífero ===" << endl;
+        Animal::mostrarInfo();
+        cout << "Tiene cola: " << (tieneColaMamifero ? "Sí" : "No") << endl;
+    }
+};
+
+class Perro : public Mamifero {
+public:
+    Perro(string n, int e, double p, bool cola) : Mamifero(n, e, p, cola) {}
+
+    void hacerSonido() const override {
+        cout << "¡Guau guau!" << endl;
+    }
+
+    void mostrarInfo() const override {
+        cout << "\n=== Perro ===" << endl;
+        Animal::mostrarInfo();
+        cout << "Tiene cola: " << (tieneColaMamifero ? "Sí" : "No") << endl;
+    }
+};
+
+class Gato : public Mamifero {
+public:
+    Gato(string n, int e, double p, bool cola) : Mamifero(n, e, p, cola) {}
+
+    void hacerSonido() const override {
+        cout << "¡Miau miau!" << endl;
+    }
+
+    void mostrarInfo() const override {
+        cout << "\n=== Gato ===" << endl;
+        Animal::mostrarInfo();
+        cout << "Tiene cola: " << (tieneColaMamifero ? "Sí" : "No") << endl;
+    }
+};
+
+// ============================================
+// NIVEL 3 - EJERCICIO 3.2: SISTEMA BANCARIO
+// ============================================
+
+class Cuenta {
+protected:
+    string numeroCuenta;
+    string propietario;
+    double saldo;
+
+public:
+    Cuenta(string numero, string prop, double sal) 
+        : numeroCuenta(numero), propietario(prop), saldo(sal) {}
+
+    string getNumeroCuenta() const { return numeroCuenta; }
+    string getPropietario() const { return propietario; }
+    double getSaldo() const { return saldo; }
+
+    void setNumeroCuenta(string n) { numeroCuenta = n; }
+    void setPropietario(string p) { propietario = p; }
+    void setSaldo(double s) { if (s >= 0) saldo = s; }
+
+    virtual void depositar(double monto) {
+        if (monto > 0) {
+            saldo += monto;
+            cout << "Depósito exitoso de $" << monto << endl;
+        }
+    }
+
+    virtual bool retirar(double monto) {
+        if (monto > 0 && saldo >= monto) {
+            saldo -= monto;
+            cout << "Retiro exitoso de $" << monto << endl;
+            return true;
+        }
+        cout << "Error: Saldo insuficiente" << endl;
+        return false;
+    }
+
+    virtual void mostrarInfo() const {
+        cout << "\n=== Cuenta ===" << endl;
+        cout << "Número: " << numeroCuenta << " | Propietario: " << propietario << endl;
+        cout << fixed << setprecision(2) << "Saldo: $" << saldo << endl;
+    }
+
+    virtual ~Cuenta() {}
+};
+
+class CuentaAhorro : public Cuenta {
+private:
+    double tasaInteres;
+
+public:
+    CuentaAhorro(string numero, string prop, double sal, double tasa)
+        : Cuenta(numero, prop, sal), tasaInteres(tasa) {}
+
+    double getTasaInteres() const { return tasaInteres; }
+    void setTasaInteres(double t) { if (t >= 0 && t <= 1) tasaInteres = t; }
+
+    void generarInteres() {
+        double interes = saldo * tasaInteres;
+        saldo += interes;
+        cout << fixed << setprecision(2);
+        cout << "Interés generado: $" << interes << " | Nuevo saldo: $" << saldo << endl;
+    }
+
+    void mostrarInfo() const override {
+        cout << "\n=== Cuenta de Ahorro ===" << endl;
+        cout << "Número: " << numeroCuenta << " | Propietario: " << propietario << endl;
+        cout << fixed << setprecision(2);
+        cout << "Saldo: $" << saldo << " | Tasa: " << (tasaInteres * 100) << "%" << endl;
+    }
+};
+
+class CuentaCorriente : public Cuenta {
+private:
+    double limiteDescubierto;
+
+public:
+    CuentaCorriente(string numero, string prop, double sal, double limite)
+        : Cuenta(numero, prop, sal), limiteDescubierto(limite) {}
+
+    double getLimiteDescubierto() const { return limiteDescubierto; }
+    void setLimiteDescubierto(double l) { if (l >= 0) limiteDescubierto = l; }
+
+    bool retirar(double monto) override {
+        double disponible = saldo + limiteDescubierto;
+        if (monto > 0 && monto <= disponible) {
+            saldo -= monto;
+            cout << "Retiro exitoso de $" << monto << endl;
+            if (saldo < 0) cout << "Usando descubierto. Saldo: -$" << -saldo << endl;
+            return true;
+        }
+        cout << "Error: Excede el límite disponible" << endl;
+        return false;
+    }
+
+    void mostrarInfo() const override {
+        cout << "\n=== Cuenta Corriente ===" << endl;
+        cout << "Número: " << numeroCuenta << " | Propietario: " << propietario << endl;
+        cout << fixed << setprecision(2);
+        cout << "Saldo: $" << saldo << " | Límite: $" << limiteDescubierto << endl;
+    }
+};
+
+// ============================================
+// NIVEL 4 - EJERCICIO 4.1: SISTEMA UNIVERSITARIO
+// ============================================
+
+class Curso {
+private:
+    string codigo, nombre, profesor;
+    int creditos;
+    double calificacion;
+
+public:
+    Curso(string cod, string nom, int cred, string prof, double calif = 0.0)
+        : codigo(cod), nombre(nom), creditos(cred), profesor(prof), calificacion(calif) {}
+
+    string getCodigo() const { return codigo; }
+    string getNombre() const { return nombre; }
+    int getCreditos() const { return creditos; }
+    double getCalificacion() const { return calificacion; }
+
+    void setCalificacion(double c) { if (c >= 0 && c <= 5.0) calificacion = c; }
+
+    void mostrarInfo() const {
+        cout << "  " << codigo << " - " << nombre << " (" << creditos << " créditos)";
+        if (calificacion > 0) cout << " - Nota: " << calificacion;
+        cout << endl;
+    }
+};
+
+class Persona {
+protected:
+    string nombre;
+    int edad;
+    string cedula;
+
+public:
+    Persona(string n, int e, string ced) : nombre(n), edad(e), cedula(ced) {}
+
+    string getNombre() const { return nombre; }
+    int getEdad() const { return edad; }
+    string getCedula() const { return cedula; }
+
+    virtual void mostrarInfo() const {
+        cout << "\nNombre: " << nombre << " | Edad: " << edad << " | Cédula: " << cedula << endl;
+    }
+
+    virtual ~Persona() {}
+};
+
+class Estudiante : public Persona {
+private:
+    string carrera;
+    double promedio;
+    int semestre;
+    vector<Curso> cursos;
+
+public:
+    Estudiante(string n, int e, string ced, string carr, double prom, int sem)
+        : Persona(n, e, ced), carrera(carr), promedio(prom), semestre(sem) {}
+
+    void matricularCurso(const Curso& curso) {
+        cursos.push_back(curso);
+        cout << "Curso matriculado: " << curso.getNombre() << endl;
+    }
+
+    double calcularPromedioActual() {
+        if (cursos.empty()) return 0.0;
+        double suma = 0.0;
+        int total = 0;
+        for (const auto& c : cursos) {
+            if (c.getCalificacion() > 0) {
+                suma += c.getCalificacion() * c.getCreditos();
+                total += c.getCreditos();
+            }
+        }
+        return (total > 0) ? suma / total : 0.0;
+    }
+
+    void mostrarInfo() const override {
+        cout << "\n=== Estudiante ===" << endl;
+        Persona::mostrarInfo();
+        cout << "Carrera: " << carrera << " | Semestre: " << semestre << endl;
+        cout << "Promedio: " << fixed << setprecision(2) << promedio << endl;
+        if (!cursos.empty()) {
+            cout << "Cursos:" << endl;
+            for (const auto& c : cursos) c.mostrarInfo();
+        }
+    }
+};
+
+class Profesor : public Persona {
+private:
+    string especialidad;
+    int anosExperiencia;
+    int numeroEstudiantes;
+
+public:
+    Profesor(string n, int e, string ced, string esp, int exp, int num)
+        : Persona(n, e, ced), especialidad(esp), anosExperiencia(exp), numeroEstudiantes(num) {}
+
+    bool estaDisponible(int hora) const {
+        return (hora >= 8 && hora <= 18);
+    }
+
+    void mostrarInfo() const override {
+        cout << "\n=== Profesor ===" << endl;
+        Persona::mostrarInfo();
+        cout << "Especialidad: " << especialidad << " | Experiencia: " << anosExperiencia << " años" << endl;
+        cout << "Estudiantes: " << numeroEstudiantes << endl;
+    }
+};
+
+class Personal : public Persona {
+private:
+    string puesto, departamento;
+    double salario;
+
+public:
+    Personal(string n, int e, string ced, string p, string dept, double sal)
+        : Persona(n, e, ced), puesto(p), departamento(dept), salario(sal) {}
+
+    double calcularSalarioMensual() const {
+        double bono = 0.0;
+        if (departamento == "Administracion") bono = salario * 0.10;
+        else if (departamento == "Mantenimiento") bono = salario * 0.05;
+        return salario + bono;
+    }
+
+    void mostrarInfo() const override {
+        cout << "\n=== Personal ===" << endl;
+        Persona::mostrarInfo();
+        cout << "Puesto: " << puesto << " | Departamento: " << departamento << endl;
+        cout << fixed << setprecision(2) << "Salario: $" << calcularSalarioMensual() << endl;
+    }
+};
+
+// ============================================
+// FUNCIONES DE EJERCICIOS
+// ============================================
+
+void ejercicio1_1() {
+    string marca, modelo;
+    int anio, opcion;
+    double velocidad;
+
+    cout << "\n=== EJERCICIO 1.1: VEHÍCULO ===" << endl;
+    cout << "Marca: "; cin >> marca;
+    cout << "Modelo: "; cin >> modelo;
+    cout << "Año: "; cin >> anio;
+    cout << "Velocidad máxima: "; cin >> velocidad;
+
+    Vehiculo v(marca, modelo, anio, velocidad);
+    v.mostrarInfo();
+    
+    cout << "\n¿Acelerar? (1=Sí/0=No): "; cin >> opcion;
+    if (opcion == 1) {
+        cout << "Incremento: "; cin >> velocidad;
+        v.acelerar(velocidad);
+        v.mostrarInfo();
+    }
+}
+
+void ejercicio1_2() {
+    string codigo, nombre;
+    double precio, porcentaje;
+    int cantidad, opcion;
+
+    cout << "\n=== EJERCICIO 1.2: PRODUCTO ===" << endl;
+    cout << "Código: "; cin >> codigo;
+    cout << "Nombre: "; cin >> nombre;
+    cout << "Precio: "; cin >> precio;
+    cout << "Cantidad: "; cin >> cantidad;
+
+    Producto p(codigo, nombre, precio, cantidad);
+    p.mostrarInfo();
+    
+    cout << "\n¿Aplicar descuento? (1=Sí/0=No): "; cin >> opcion;
+    if (opcion == 1) {
+        cout << "Porcentaje: "; cin >> porcentaje;
+        p.aplicarDescuento(porcentaje);
+        p.mostrarInfo();
+    }
+}
+
+void ejercicio2_1() {
+    string marca, modelo, combustible;
+    int anio, puertas;
+    double velocidad;
+
+    cout << "\n=== EJERCICIO 2.1: AUTO ===" << endl;
+    cout << "Marca: "; cin >> marca;
+    cout << "Modelo: "; cin >> modelo;
+    cout << "Año: "; cin >> anio;
+    cout << "Velocidad: "; cin >> velocidad;
+    cout << "Puertas: "; cin >> puertas;
+    cout << "Combustible: "; cin >> combustible;
+
+    Auto a(marca, modelo, anio, velocidad, puertas, combustible);
+    a.mostrarInfo();
+}
+
+void ejercicio2_2() {
+    string nombre, numero, beneficios;
+    double salario, bono;
+
+    cout << "\n=== EJERCICIO 2.2: EMPLEADOS ===" << endl;
+    cout << "Nombre: "; cin.ignore(); getline(cin, nombre);
+    cout << "Número: "; cin >> numero;
+    cout << "Salario base: "; cin >> salario;
+    cout << "Bono: "; cin >> bono;
+    cin.ignore();
+    cout << "Beneficios: "; getline(cin, beneficios);
+
+    EmpleadoTiempoCompleto emp(nombre, numero, salario, beneficios, bono);
+    emp.mostrarInfo();
+}
+
+void ejercicio3_1() {
+    string nombre;
+    int edad;
+    double peso;
+    char cola;
+
+    cout << "\n== EJERCICIO 3.1: ANIMALES =" << endl;
+    cout << "Nombre del perro: "; cin >> nombre;
+    cout << "Edad: "; cin >> edad;
+    cout << "Peso: "; cin >> peso;
+    cout << "¿Tiene cola? (s/n): "; cin >> cola;
+
+    Perro perro(nombre, edad, peso, (cola == 's'));
+    perro.mostrarInfo();
+    perro.hacerSonido();
+}
+
+void ejercicio3_2() {
+    string numero, propietario;
+    double saldo, tasa, monto;
+    int opcion;
+
+    cout << "\n== EJERCICIO 3.2: CUENTA AHORRO ==" << endl;
+    cout << "Número de cuenta: "; cin >> numero;
+    cin.ignore();
+    cout << "Propietario: "; getline(cin, propietario);
+    cout << "Saldo inicial: "; cin >> saldo;
+    cout << "Tasa de interés (0.02 = 2%): "; cin >> tasa;
+
+    CuentaAhorro cuenta(numero, propietario, saldo, tasa);
+    cuenta.mostrarInfo();
+
+    cout << "\n¿Generar interés? (1=Sí/0=No): "; cin >> opcion;
+    if (opcion == 1) {
+        cuenta.generarInteres();
+        cuenta.mostrarInfo();
+    }
+}
+
+void ejercicio4_1() {
+    string nombre, cedula, carrera;
+    int edad, semestre;
+    double promedio;
+
+    cout << "\n= EJERCICIO 4.1: ESTUDIANTE =" << endl;
+    cout << "Nombre: "; cin.ignore(); getline(cin, nombre);
+    cout << "Edad: "; cin >> edad;
+    cout << "Cédula: "; cin >> cedula;
+    cin.ignore();
+    cout << "Carrera: "; getline(cin, carrera);
+    cout << "Promedio: "; cin >> promedio;
+    cout << "Semestre: "; cin >> semestre;
+
+    Estudiante est(nombre, edad, cedula, carrera, promedio, semestre);
+    
+    Curso c1("CS101", "Programación I", 4, "Dr. Pérez", 4.5);
+    Curso c2("MAT201", "Cálculo II", 3, "Dra. Ramírez", 4.0);
+    
+    est.matricularCurso(c1);
+    est.matricularCurso(c2);
+    est.mostrarInfo();
+    
+    cout << "\nPromedio calculado: " << fixed << setprecision(2) 
+         << est.calcularPromedioActual() << endl;
+}
+
+
+// MENÚ PRINCIPAL
+
+
+int main() {
+    int opcion;
+
+    do {
+        cout << "\n===============  ===================" << endl;
+        cout << "    TALLER DE P.O.O - MENÚ PRINCIPAL" << endl;
+        cout << "=================   ==================" << endl;
+        cout << "NIVEL 1:" << endl;
+        cout << "1. Ejercicio 1.1 - Clase Vehículo" << endl;
+        cout << "2. Ejercicio 1.2 - Clase Producto" << endl;
+        cout << "NIVEL 2:" << endl;
+        cout << "3. Ejercicio 2.1 - Auto y Motocicleta" << endl;
+        cout << "4. Ejercicio 2.2 - Sistema Empleados" << endl;
+        cout << "NIVEL 3:" << endl;
+        cout << "5. Ejercicio 3.1 - Jerarquía Animales" << endl;
+        cout << "6. Ejercicio 3.2 - Sistema Bancario" << endl;
+        cout << "NIVEL 4:" << endl;
+        cout << "7. Ejercicio 4.1 - Sistema Universitario" << endl;
+        cout << "8. Salir" << endl;
+        cout << "=========== ==  =================" << endl;
+        cout << "Opción: ";
+        cin >> opcion;
+
+        switch(opcion) {
+            case 1: ejercicio1_1(); break;
+            case 2: ejercicio1_2(); break;
+            case 3: ejercicio2_1(); break;
+            case 4: ejercicio2_2(); break;
+            case 5: ejercicio3_1(); break;
+            case 6: ejercicio3_2(); break;
+            case 7: ejercicio4_1(); break;
+            case 8: cout << "\n Hasta willy salio" << endl; break;
+            default: cout << "Opción inválida" << endl;
+        }
+
+    } while(opcion != 8);
+
+    return 0;
+}
