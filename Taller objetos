@@ -113,7 +113,7 @@ public:
 };
 
 // ============================================
-// NIVEL 2 - EJERCICIO 2.1: HERENCIA VEHÍCULOS
+//     EJERCICIO 2.1: HERENCIA VEHÍCULOS
 // ============================================
 
 class Auto : public Vehiculo {
@@ -249,7 +249,7 @@ public:
 };
 
 // ============================================
-// NIVEL 3 - EJERCICIO 3.1: JERARQUÍA ANIMALES
+//    EJERCICIO 3.1: JERARQUÍA ANIMALES
 // ============================================
 
 class Animal {
